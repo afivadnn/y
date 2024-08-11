@@ -29,6 +29,7 @@ class RvAdapter(
         holder.sekolah.text = item.school
         holder.hobi.text = item.hobby
 
+        // Decode image string and set it to ImageView
         val photoBitmap = AddFriend().strToBitmap(item.photo)
         if (photoBitmap != null) {
             holder.pto.setImageBitmap(photoBitmap)

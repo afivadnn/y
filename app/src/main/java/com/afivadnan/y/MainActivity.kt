@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         enableEdgeToEdge()
+        setContentView(binding.root)
 
         val factoryModel = Factory(this)
         viewModel = ViewModelProvider(this, factoryModel)[FriendViewModel::class.java]
@@ -37,10 +38,12 @@ class MainActivity : AppCompatActivity() {
         binding.TvShow.adapter = adapter
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.getFriend().collect { friends ->
-                    list.clear()
-                    list.addAll(friends)
-                    adapter.setData(list)
+                launch {
+                    viewModel.getFriend().collect { friends ->
+                        list.clear()
+                        list.addAll(friends)
+                        adapter.setData(list)
+                    }
                 }
             }
         }

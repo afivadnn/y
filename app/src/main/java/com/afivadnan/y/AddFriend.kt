@@ -12,10 +12,12 @@ import android.widget.Toast
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -77,12 +79,14 @@ class AddFriend : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @Throws(IOException::class)
     private fun createImageFile(): File {
         val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val file = File.createTempFile("photo", ".jpg", storageDir)
-        Log.d("AddFriend", "Photo File Path: ${file.absolutePath}")
-        return file
+        return File.createTempFile(
+            "photo_${System.currentTimeMillis()}", // Nama file
+            ".jpg",
+            storageDir
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -139,7 +143,10 @@ class AddFriend : AppCompatActivity() {
         galleryLauncher.launch(galleryIntent)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun saveFriend() {
+        Log.d("AddFriend", "Photo Base64: $photoPath")
+
         val name = binding.adNama.text.toString()
         val school = binding.adSekolah.text.toString()
         val hobby = binding.adHobi.text.toString()
@@ -149,19 +156,24 @@ class AddFriend : AppCompatActivity() {
             return
         }
 
-        try {
-            val friend = Friend(name = name, school = school, hobby = hobby, photo = photoPath)
-            lifecycleScope.launch {
-                viewModel.insertFriend(friend)
-                setResult(RESULT_OK)
-                finish()
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Failed to save friend: ${e.message}", Toast.LENGTH_SHORT).show()
+
+        val photoPath = bitmapToStr(binding.addImg.drawable.toBitmap())
+        Log.d("AddFriend", "Base64 Photo: $photoPath") // Log untuk memeriksa string Base64
+
+
+        val friend = Friend(name = name, school = school, hobby = hobby, photo = photoPath)
+        lifecycleScope.launch {
+            viewModel.insertFriend(friend)
+            setResult(RESULT_OK)
+            finish()
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun updateFriend() {
+
+        Log.d("AddFriend", "Photo Base64: $photoPath")
+
         val name = binding.adNama.text.toString()
         val school = binding.adSekolah.text.toString()
         val hobby = binding.adHobi.text.toString()
@@ -170,10 +182,15 @@ class AddFriend : AppCompatActivity() {
             Toast.makeText(this, "All fields must be filled", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val photoPath = bitmapToStr(binding.addImg.drawable.toBitmap())
+        Log.d("UpdateFriend", "Base64 Photo: $photoPath") // Log untuk memeriksa string Base64
+
 
         val friend = Friend(name = name, school = school, hobby = hobby, photo = photoPath).apply {
             id = friendId ?: 0
         }
+
         lifecycleScope.launch {
             viewModel.updateFriend(friend)
             setResult(RESULT_OK)
@@ -205,10 +222,31 @@ class AddFriend : AppCompatActivity() {
         return try {
             val cleanedString = encodedString.replace("\\s".toRegex(), "")
             val byteArray = Base64.getDecoder().decode(cleanedString)
+            Log.d("ImageConversion", "Byte array size: ${byteArray.size}")
             BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         } catch (e: Exception) {
+            Log.e("ImageConversion", "Error decoding image", e)
             e.printStackTrace()
             null
         }
     }
+
+
+
+    private fun saveImageToStorage(bitmap: Bitmap): String? {
+        return try {
+            val file = createImageFile()
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
+            outputStream.flush()
+            outputStream.close()
+            file.absolutePath
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+
+
 }
