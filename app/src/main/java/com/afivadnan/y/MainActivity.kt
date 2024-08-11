@@ -24,40 +24,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         enableEdgeToEdge()
-        setContentView(binding.root)
 
         val factoryModel = Factory(this)
         viewModel = ViewModelProvider(this, factoryModel)[FriendViewModel::class.java]
 
-        adapter = RvAdapter(
-            this,
-            { _, data ->
-                val intent = Intent(this, AddFriend::class.java).apply {
-                    putExtra("FRIEND_ID", data.id)
-                }
-                startActivity(intent)
-            },
-            { _, data ->
-                lifecycleScope.launch {
-                    viewModel.deleteFriend(data)
-                }
-            },
-            { _, data ->
-                val intent = Intent(this, AddFriend::class.java).apply {
-                    putExtra("FRIEND_ID", data.id)
-                }
-                startActivity(intent)
+        adapter = RvAdapter { _, data ->
+            val intent = Intent(this, AddFriend::class.java).apply {
+                putExtra("FRIEND_ID", data.id)
             }
-        )
+            startActivity(intent)
+        }
         binding.TvShow.adapter = adapter
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.getFriend().collect { friends ->
-                        list.clear()
-                        list.addAll(friends)
-                        adapter.setData(list)
-                    }
+                viewModel.getFriend().collect { friends ->
+                    list.clear()
+                    list.addAll(friends)
+                    adapter.setData(list)
                 }
             }
         }

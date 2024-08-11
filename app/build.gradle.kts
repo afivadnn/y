@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.room.runtime)
+    implementation (libs.activity.ktx)
+    implementation (libs.androidx.fragment.ktx)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.room.compiler)
     implementation(libs.room.ktx)

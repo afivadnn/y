@@ -1,5 +1,7 @@
 [versions]
+activityKtxVersion = "1.9.1"
 agp = "8.3.2"
+fragmentKtx = "1.5.6"
 kotlin = "1.9.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -17,6 +19,8 @@ sspAndroid = "1.1.1"
 
 [libraries]
 
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 room-runtime = {group = "androidx.room", name = "room-runtime",version.ref = "room-runtime"}
 room-compiler = {group = "androidx.room", name = "room-compiler",version.ref = "room-compiler"}
 room-ktx = {group = "androidx.room", name = "room-ktx",version.ref = "room-ktx"}

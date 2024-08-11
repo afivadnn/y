@@ -1,41 +1,45 @@
 package com.afivadnan.y
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 
 class RvAdapter(
-    private val context: Context,
-    private val onItemClick: (position: Int, data: Friend) -> Unit,
-    private val onDeleteClick: (position: Int, data: Friend) -> Unit,
-    private val onUpdateClick: (position: Int, data: Friend) -> Unit
+    private val onItemClick: (position: Int, data: Friend) -> Unit
 ) : RecyclerView.Adapter<RvAdapter.FriendViewHolder>() {
 
     private var listItem = emptyList<Friend>()
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): FriendViewHolder {
-        val view = LayoutInflater.from(context).inflate(R.layout.item_teman, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_teman, parent, false)
         return FriendViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
         val item = listItem[position]
         holder.nama.text = item.name
         holder.sekolah.text = item.school
         holder.hobi.text = item.hobby
 
+        val photoBitmap = AddFriend().strToBitmap(item.photo)
+        if (photoBitmap != null) {
+            holder.pto.setImageBitmap(photoBitmap)
+        } else {
+            Log.d("RvAdapter", "Image is null for position: $position")
+            holder.pto.setImageResource(R.drawable.baseline_auto_mode_24)
+        }
+
         holder.itemView.setOnClickListener { onItemClick(position, item) }
-        holder.deleteButton.setOnClickListener { onDeleteClick(position, item) }
-        holder.updateButton.setOnClickListener { onUpdateClick(position, item) }
     }
+
 
     override fun getItemCount(): Int {
         return listItem.size
@@ -47,11 +51,10 @@ class RvAdapter(
         notifyDataSetChanged()
     }
 
-    class FriendViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nama: TextView = itemView.findViewById(R.id.nama)
-        val sekolah: TextView = itemView.findViewById(R.id.sekolah)
-        val hobi: TextView = itemView.findViewById(R.id.hobi)
-        val deleteButton: Button = itemView.findViewById(R.id.delete_button)
-        val updateButton: Button = itemView.findViewById(R.id.update_button)
+    class FriendViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val nama: TextView = view.findViewById(R.id.nama)
+        val sekolah: TextView = view.findViewById(R.id.sekolah)
+        val hobi: TextView = view.findViewById(R.id.hobi)
+        val pto: ImageView = view.findViewById(R.id.Image)
     }
 }

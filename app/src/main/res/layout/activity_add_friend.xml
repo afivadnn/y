@@ -1,44 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AddFriend">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp">
 
         <Button
             android:id="@+id/btn_sv"
-            android:layout_gravity="end"
+            android:textSize="@dimen/_15ssp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_margin="@dimen/_10sdp"
-            android:text="@string/save"
-            />
+            android:text="@string/save" />
+
+        <ImageView
+            android:id="@+id/addImg"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_150sdp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/_10sdp"
+            android:contentDescription="@string/img"
+            android:src="@color/darkgray" />
 
         <EditText
             android:id="@+id/ad_nama"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_48sdp"
             android:layout_marginHorizontal="@dimen/_20sdp"
-            android:hint="@string/nama"/>
+            android:autofillHints="name"
+            android:hint="@string/nama"
+            android:inputType="text"
+            android:textSize="@dimen/_15ssp" />
 
         <EditText
             android:id="@+id/ad_sekolah"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_48sdp"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            android:hint="@string/sekolah"/>
+            android:autofillHints="school"
+            android:hint="@string/sekolah"
+            android:inputType="text"
+            android:textSize="@dimen/_15ssp" />
 
         <EditText
             android:id="@+id/ad_hobi"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/_48sdp"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_20sdp"
-            android:hint="@string/hobi"/>
+            android:autofillHints="hobi"
+            android:hint="@string/hobi"
+            android:inputType="textNoSuggestions"
+            android:textSize="@dimen/_15ssp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -51,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_20sdp"
                 android:text="@string/update"
+                android:textSize="@dimen/_15ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,12 +84,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_20sdp"
                 android:text="@string/delete"
+                android:textSize="@dimen/_15ssp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </LinearLayout>
+
+    </ScrollView>
 </layout>

@@ -28,7 +28,7 @@
             android:layout_margin="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:contentDescription="@string/img" />
+            android:contentDescription="@string/icon_add" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
